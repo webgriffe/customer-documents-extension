@@ -14,6 +14,16 @@
                 </methods>
             </webgriffe_customerdocuments_invoice>
         </resources>
+        <faults>
+            <fault-400>
+                <code>400</code>
+                <message>Bad request</message>
+            </fault-400>
+            <fault-404>
+                <code>404</code>
+                <message>Not found</message>
+            </fault-404>
+        </faults>
         <acl>
             <resources>
                 <webgriffe_customerdocuments translate="title" module="webgriffe_customerdocuments">

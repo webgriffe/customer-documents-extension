@@ -23,7 +23,7 @@ $table = $installer->getConnection()
         'customer_id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
         null,
-        array(),
+        array('nullable' => false),
         'Customer Id'
     )
     ->addColumn(
@@ -38,42 +38,38 @@ $table = $installer->getConnection()
         'Order Id'
     )
     ->addColumn(
-        'increment_id',
+        'external_id',
         Varien_Db_Ddl_Table::TYPE_TEXT,
-        50,
-        array(),
+        255,
+        array('nullable' => true),
         'Increment Id'
     )
     ->addColumn(
         'filename',
         Varien_Db_Ddl_Table::TYPE_TEXT,
         255,
-        array(),
+        array('nullable' => false),
         'Filename'
     )
     ->addColumn(
         'pdf',
         Varien_Db_Ddl_Table::TYPE_BLOB,
         '64M',
-        array(),
+        array('nullable' => false),
         'Pdf Blob'
     )
     ->addColumn(
         'created_at',
         Varien_Db_Ddl_Table::TYPE_TIMESTAMP,
         null,
-        array(
-            'nullable' => false,
-        ),
+        array('nullable' => false),
         'Created At'
     )
     ->addColumn(
         'updated_at',
         Varien_Db_Ddl_Table::TYPE_TIMESTAMP,
         null,
-        array(
-            'nullable' => false,
-        ),
+        array('nullable' => false),
         'Updated At'
     )
     ->addForeignKey(
