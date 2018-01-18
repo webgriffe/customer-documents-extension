@@ -1,0 +1,12 @@
+{
+    "name": "webgriffe/customer-documents-extension",
+    "type": "magento-module",
+    "license":"MIT",
+    "description":"Customer Documents Magento 1.x Extension",
+    "authors":[
+        {
+            "name":"Webgriffe SRL",
+            "email":"support@webgriffe.com"
+        }
+    ]
+}

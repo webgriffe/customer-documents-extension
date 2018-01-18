@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Webgriffe_CustomerDocuments>
+            <version>1.0.0</version>
+        </Webgriffe_CustomerDocuments>
+    </modules>
+    <global>
+        <models>
+            <webgriffe_customerdocuments>
+                <class>Webgriffe_CustomerDocuments_Model</class>
+                <resourceModel>webgriffe_customerdocuments_resource</resourceModel>
+            </webgriffe_customerdocuments>
+            <webgriffe_customerdocuments_resource>
+                <class>Webgriffe_CustomerDocuments_Model_Resource</class>
+            </webgriffe_customerdocuments_resource>
+        </models>
+        <blocks>
+            <webgriffe_customerdocuments>
+                <class>Webgriffe_CustomerDocuments_Block</class>
+            </webgriffe_customerdocuments>
+        </blocks>
+        <helpers>
+            <webgriffe_customerdocuments>
+                <class>Webgriffe_CustomerDocuments_Helper</class>
+            </webgriffe_customerdocuments>
+        </helpers>
+        <resources>
+            <webgriffe_customerdocuments_setup>
+                <setup>
+                    <module>Webgriffe_CustomerDocuments</module>
+                </setup>
+            </webgriffe_customerdocuments_setup>
+        </resources>
+    </global>
+</config>
