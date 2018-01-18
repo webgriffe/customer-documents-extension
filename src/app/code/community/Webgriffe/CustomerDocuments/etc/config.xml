@@ -13,6 +13,11 @@
             </webgriffe_customerdocuments>
             <webgriffe_customerdocuments_resource>
                 <class>Webgriffe_CustomerDocuments_Model_Resource</class>
+                <entities>
+                    <invoice>
+                        <table>webgriffe_customer_documents_invoice</table>
+                    </invoice>
+                </entities>
             </webgriffe_customerdocuments_resource>
         </models>
         <blocks>

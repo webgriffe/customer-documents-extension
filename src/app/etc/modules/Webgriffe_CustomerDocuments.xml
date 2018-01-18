@@ -4,6 +4,10 @@
         <Webgriffe_CustomerDocuments>
             <active>true</active>
             <codePool>community</codePool>
+            <depends>
+                <Mage_Customer/>
+                <Mage_Sales />
+            </depends>
         </Webgriffe_CustomerDocuments>
     </modules>
 </config>
