@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<config>
+    <api>
+        <resources>
+            <webgriffe_customerdocuments_invoice translate="title" module="webgriffe_customerdocuments">
+                <title>Webgriffe Customer Documents - Invoice API</title>
+                <model>webgriffe_customerdocuments/invoice_api</model>
+                <acl>webgriffe_customerdocuments/invoice</acl>
+                <methods>
+                    <create translate="title" module="webgriffe_customerdocuments">
+                        <title>Create invoice</title>
+                        <methods>create</methods>
+                    </create>
+                </methods>
+            </webgriffe_customerdocuments_invoice>
+        </resources>
+        <acl>
+            <resources>
+                <webgriffe_customerdocuments translate="title" module="webgriffe_customerdocuments">
+                    <title>Webgriffe Customer Documents</title>
+                    <sort_order>1000</sort_order>
+                    <invoice translate="title" module="webgriffe_customerdocuments">
+                        <title>Invoice data</title>
+                    </invoice>
+                </webgriffe_customerdocuments>
+            </resources>
+        </acl>
+    </api>
+</config>
