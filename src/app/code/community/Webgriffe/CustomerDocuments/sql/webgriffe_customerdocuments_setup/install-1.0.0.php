@@ -6,9 +6,9 @@ $installer = $this;
 $installer->startSetup();
 
 $table = $installer->getConnection()
-    ->newTable($installer->getTable('webgriffe_customerdocuments/invoice'))
+    ->newTable($installer->getTable('webgriffe_customerdocuments/document'))
     ->addColumn(
-        'invoice_id',
+        'document_id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
         null,
         array(
@@ -17,7 +17,7 @@ $table = $installer->getConnection()
             'nullable' => false,
             'primary' => true,
         ),
-        'Invoice Id'
+        'Document Id'
     )
     ->addColumn(
         'customer_id',
@@ -42,21 +42,21 @@ $table = $installer->getConnection()
         Varien_Db_Ddl_Table::TYPE_TEXT,
         255,
         array('nullable' => true),
-        'Increment Id'
+        'External Id'
     )
     ->addColumn(
-        'filename',
+        'type',
         Varien_Db_Ddl_Table::TYPE_TEXT,
         255,
         array('nullable' => false),
-        'Filename'
+        'Document Type'
     )
     ->addColumn(
-        'pdf',
-        Varien_Db_Ddl_Table::TYPE_BLOB,
-        '64M',
-        array('nullable' => false),
-        'Pdf Blob'
+        'filepath',
+        Varien_Db_Ddl_Table::TYPE_TEXT,
+        255,
+        array('nullable' => false, 'default' => false),
+        'File path'
     )
     ->addColumn(
         'created_at',
@@ -73,7 +73,7 @@ $table = $installer->getConnection()
         'Updated At'
     )
     ->addForeignKey(
-        $installer->getFkName('webgriffe_customerdocuments/invoice', 'customer_id', 'customer/entity', 'entity_id'),
+        $installer->getFkName('webgriffe_customerdocuments/document', 'customer_id', 'customer/entity', 'entity_id'),
         'customer_id',
         $installer->getTable('customer/entity'),
         'entity_id',
@@ -81,14 +81,14 @@ $table = $installer->getConnection()
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
     ->addForeignKey(
-        $installer->getFkName('webgriffe_customerdocuments/invoice', 'order_id', 'sales/order', 'entity_id'),
+        $installer->getFkName('webgriffe_customerdocuments/document', 'order_id', 'sales/order', 'entity_id'),
         'order_id',
         $installer->getTable('sales/order'),
         'entity_id',
         Varien_Db_Ddl_Table::ACTION_SET_NULL,
         Varien_Db_Ddl_Table::ACTION_CASCADE
     )
-    ->setComment('Webgriffe Customer Documents Invoices')
+    ->setComment('Webgriffe Customer Documents')
 ;
 
 $installer->getConnection()->createTable($table);

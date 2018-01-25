@@ -14,9 +14,9 @@
             <webgriffe_customerdocuments_resource>
                 <class>Webgriffe_CustomerDocuments_Model_Resource</class>
                 <entities>
-                    <invoice>
-                        <table>webgriffe_customer_documents_invoice</table>
-                    </invoice>
+                    <document>
+                        <table>customer_document</table>
+                    </document>
                 </entities>
             </webgriffe_customerdocuments_resource>
         </models>

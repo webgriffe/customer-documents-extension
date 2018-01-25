@@ -2,17 +2,17 @@
 <config>
     <api>
         <resources>
-            <webgriffe_customerdocuments_invoice translate="title" module="webgriffe_customerdocuments">
-                <title>Webgriffe Customer Documents - Invoice API</title>
-                <model>webgriffe_customerdocuments/invoice_api</model>
-                <acl>webgriffe_customerdocuments/invoice</acl>
+            <webgriffe_customerdocuments_document translate="title" module="webgriffe_customerdocuments">
+                <title>Webgriffe Customer Documents - Document API</title>
+                <model>webgriffe_customerdocuments/document_api</model>
+                <acl>webgriffe_customerdocuments/document</acl>
                 <methods>
-                    <create translate="title" module="webgriffe_customerdocuments">
-                        <title>Create invoice</title>
-                        <methods>create</methods>
-                    </create>
+                    <createForOrder translate="title" module="webgriffe_customerdocuments">
+                        <title>Create Document for a given Order</title>
+                        <methods>createForOrder</methods>
+                    </createForOrder>
                 </methods>
-            </webgriffe_customerdocuments_invoice>
+            </webgriffe_customerdocuments_document>
         </resources>
         <faults>
             <fault-400>
@@ -29,9 +29,9 @@
                 <webgriffe_customerdocuments translate="title" module="webgriffe_customerdocuments">
                     <title>Webgriffe Customer Documents</title>
                     <sort_order>1000</sort_order>
-                    <invoice translate="title" module="webgriffe_customerdocuments">
-                        <title>Invoice data</title>
-                    </invoice>
+                    <document translate="title" module="webgriffe_customerdocuments">
+                        <title>Document data</title>
+                    </document>
                 </webgriffe_customerdocuments>
             </resources>
         </acl>
