@@ -1,0 +1,34 @@
+<?php /* @var $this Webgriffe_CustomerDocuments_Block_Order_List */ ?>
+<?php if ($this->getDocuments()->getSize()): ?>
+    <h2 class="table-caption"><?php echo $this->__('Order Documents') ?></h2>
+
+    <table class="data-table" id="my-documents-table">
+        <col />
+        <col width="1" />
+        <col />
+        <col width="1" />
+        <thead>
+        <tr>
+            <th><?php echo $this->__('Date') ?></th>
+            <th><?php echo $this->__('Type') ?></th>
+            <th><?php echo $this->__('Filename') ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($this->getDocuments() as $document): ?>
+            <tr>
+                <td><?php echo $document->getCreatedAt() ?></td>
+                <td class="nobr"><?php echo $this->__($document->getTypeLabel()) ?></td>
+                <td class="nobr"><?php echo $document->getFileName() ?></td>
+                <td>
+                    <a href="<?php echo $this->getUrl('customer_documents/index/download', ['id' => $document->getId()]) ?>">
+                        <?php echo $this->__('Download') ?>
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-documents-table');</script>
+<?php endif; ?>

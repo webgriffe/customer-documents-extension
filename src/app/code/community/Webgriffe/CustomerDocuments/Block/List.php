@@ -3,7 +3,7 @@
 class Webgriffe_CustomerDocuments_Block_List extends Mage_Core_Block_Template
 {
     /**
-     * @return Mage_Eav_Model_Entity_Collection_Abstract|Webgriffe_CustomerDocuments_Model_Resource_Document_Collection
+     * @return Webgriffe_CustomerDocuments_Model_Resource_Document_Collection
      */
     public function getDocuments()
     {

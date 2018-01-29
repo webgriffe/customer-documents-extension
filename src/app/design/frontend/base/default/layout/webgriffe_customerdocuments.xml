@@ -22,4 +22,10 @@
             <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
         </reference>
     </webgriffe_customerdocuments_index_index>
+
+    <sales_order_view>
+        <reference name="my.account.wrapper">
+            <block type="webgriffe_customerdocuments/order_list" name="webgriffe_customerdocuments.order_list" template="webgriffe_customerdocuments/order/list.phtml" />
+        </reference>
+    </sales_order_view>
 </layout>
