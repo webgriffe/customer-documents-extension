@@ -30,7 +30,7 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
 
     public static function getAllowedTypes()
     {
-        return [self::TYPE_INVOICE, self::TYPE_DELIVERY_NOTE];
+        return array_keys(self::getTypeLabelMapping());
     }
 
     /**
@@ -49,6 +49,17 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
     public function getFileName()
     {
         return basename($this->getAbsoluteFilepath());
+    }
+
+    public function getTypeLabel()
+    {
+        $typeLabelMapping = self::getTypeLabelMapping();
+        return $typeLabelMapping[$this->getType()];
+    }
+
+    protected static function getTypeLabelMapping()
+    {
+        return [self::TYPE_INVOICE => 'Invoice', self::TYPE_DELIVERY_NOTE => 'Delivery Note'];
     }
 
     protected function getAbsoluteFilepath()

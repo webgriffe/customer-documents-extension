@@ -6,12 +6,14 @@
 <?php if ($this->getDocuments()->getSize()): ?>
     <table class="data-table" id="my-documents-table">
         <col />
+        <col width="1" />
         <col />
         <col width="1" />
         <thead>
         <tr>
             <th><?php echo $this->__('Date') ?></th>
-            <th class="nobr"><?php echo $this->__('Filename') ?></th>
+            <th><?php echo $this->__('Type') ?></th>
+            <th><?php echo $this->__('Filename') ?></th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -19,7 +21,8 @@
             <?php foreach ($this->getDocuments() as $document): ?>
                 <tr>
                     <td><?php echo $document->getCreatedAt() ?></td>
-                    <td><?php echo $document->getFileName() ?></td>
+                    <td class="nobr"><?php echo $this->__($document->getTypeLabel()) ?></td>
+                    <td class="nobr"><?php echo $document->getFileName() ?></td>
                     <td>
                         <a href="<?php echo $this->getUrl('customer_documents/index/download', ['id' => $document->getId()]) ?>">
                             <?php echo $this->__('Download') ?>
