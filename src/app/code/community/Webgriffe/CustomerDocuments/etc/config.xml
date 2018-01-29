@@ -38,4 +38,31 @@
             </webgriffe_customerdocuments_setup>
         </resources>
     </global>
+    <frontend>
+        <layout>
+            <updates>
+                <webgriffe_customerdocuments>
+                    <file>webgriffe_customerdocuments.xml</file>
+                </webgriffe_customerdocuments>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Webgriffe_CustomerDocuments>
+                    <files>
+                        <default>Webgriffe_CustomerDocuments.csv</default>
+                    </files>
+                </Webgriffe_CustomerDocuments>
+            </modules>
+        </translate>
+        <routers>
+            <webgriffe_customerdocuments>
+                <use>standard</use>
+                <args>
+                    <module>Webgriffe_CustomerDocuments</module>
+                    <frontName>customer_documents</frontName>
+                </args>
+            </webgriffe_customerdocuments>
+        </routers>
+    </frontend>
 </config>

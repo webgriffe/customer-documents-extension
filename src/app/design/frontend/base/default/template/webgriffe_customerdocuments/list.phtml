@@ -1,0 +1,35 @@
+<?php /* @var $this Webgriffe_CustomerDocuments_Block_List */ ?>
+<div class="page-title">
+    <h1><?php echo $this->__('My Documents') ?></h1>
+</div>
+
+<?php if ($this->getDocuments()->getSize()): ?>
+    <table class="data-table" id="my-documents-table">
+        <col />
+        <col />
+        <col width="1" />
+        <thead>
+        <tr>
+            <th><?php echo $this->__('Date') ?></th>
+            <th class="nobr"><?php echo $this->__('Filename') ?></th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($this->getDocuments() as $document): ?>
+                <tr>
+                    <td><?php echo $document->getCreatedAt() ?></td>
+                    <td><?php echo $document->getFileName() ?></td>
+                    <td>
+                        <a href="<?php echo $this->getUrl('customer_documents/index/download', ['id' => $document->getId()]) ?>">
+                            <?php echo $this->__('Download') ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <script type="text/javascript">decorateTable('my-documents-table');</script>
+<?php else: ?>
+    <p><?php echo $this->__('You have no documents.'); ?></p>
+<?php endif; ?>

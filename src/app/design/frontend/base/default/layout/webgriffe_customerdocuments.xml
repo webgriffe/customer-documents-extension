@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<layout>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink" translate="label" module="webgriffe_customerdocuments">
+                <name>customer_documents</name>
+                <path>customer_documents/index/index</path>
+                <label>My Documents</label>
+            </action>
+        </reference>
+    </customer_account>
+
+    <webgriffe_customerdocuments_index_index>
+        <update handle="customer_account"/>
+        <reference name="head">
+            <action method="setTitle" translate="title" module="webgriffe_customerdocuments">
+                <title>My Documents</title>
+            </action>
+        </reference>
+        <reference name="my.account.wrapper">
+            <block type="webgriffe_customerdocuments/list" name="webgriffe_customerdocuments.list" template="webgriffe_customerdocuments/list.phtml"/>
+            <block type="customer/account_dashboard" name="customer.account.link.back" template="customer/account/link/back.phtml"/>
+        </reference>
+    </webgriffe_customerdocuments_index_index>
+</layout>

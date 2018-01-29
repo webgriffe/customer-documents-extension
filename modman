@@ -1,2 +1,5 @@
 src/app/code/community/Webgriffe/CustomerDocuments/ app/code/community/Webgriffe/CustomerDocuments/
 src/app/etc/modules/Webgriffe_CustomerDocuments.xml app/etc/modules/Webgriffe_CustomerDocuments.xml
+src/app/design/frontend/base/default/layout/webgriffe_customerdocuments.xml app/design/frontend/base/default/layout/webgriffe_customerdocuments.xml
+src/app/design/frontend/base/default/template/webgriffe_customerdocuments/ app/design/frontend/base/default/template/webgriffe_customerdocuments/
+src/app/locale/it_IT/Webgriffe_CustomerDocuments.csv app/locale/it_IT/Webgriffe_CustomerDocuments.csv

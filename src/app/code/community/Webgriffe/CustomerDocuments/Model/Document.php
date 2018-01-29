@@ -41,6 +41,21 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         return rtrim(Mage::getBaseDir('var'), DS) . DS . self::BASE_DIR_NAME;
     }
 
+    public function getFileContent()
+    {
+        return file_get_contents($this->getAbsoluteFilepath());
+    }
+
+    public function getFileName()
+    {
+        return basename($this->getAbsoluteFilepath());
+    }
+
+    protected function getAbsoluteFilepath()
+    {
+        return self::getDocumentBasePath() . DS . $this->getFilepath();
+    }
+
     protected function _construct()
     {
         $this->_init('webgriffe_customerdocuments/document');
