@@ -4,7 +4,7 @@
         <reference name="customer_account_navigation">
             <action method="addLink" translate="label" module="webgriffe_customerdocuments">
                 <name>customer_documents</name>
-                <path>customer_documents/index/index</path>
+                <path>webgriffe_customerdocuments/index/index/</path>
                 <label>My Documents</label>
             </action>
         </reference>
