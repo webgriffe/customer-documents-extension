@@ -3,3 +3,5 @@ src/app/etc/modules/Webgriffe_CustomerDocuments.xml app/etc/modules/Webgriffe_Cu
 src/app/design/frontend/base/default/layout/webgriffe_customerdocuments.xml app/design/frontend/base/default/layout/webgriffe_customerdocuments.xml
 src/app/design/frontend/base/default/template/webgriffe_customerdocuments/ app/design/frontend/base/default/template/webgriffe_customerdocuments/
 src/app/locale/it_IT/Webgriffe_CustomerDocuments.csv app/locale/it_IT/Webgriffe_CustomerDocuments.csv
+src/app/locale/it_IT/template/email/webgriffe_customerdocuments app/locale/it_IT/template/email/webgriffe_customerdocuments
+src/app/locale/en_US/template/email/webgriffe_customerdocuments app/locale/en_US/template/email/webgriffe_customerdocuments

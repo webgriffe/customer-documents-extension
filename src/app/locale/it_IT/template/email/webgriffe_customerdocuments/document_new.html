@@ -1,0 +1,25 @@
+<!--@subject Nuovo documento per te @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var=$user.name":"Admin Name"}
+@-->
+
+<!--@styles
+@-->
+
+{{template config_path="design/email/header"}}
+{{inlinecss file="email-inline.css"}}
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td class="action-content">
+            <h1>{{htmlescape var=$user.name}},</h1>
+            <p>un nuovo documento &egrave; stato emesso per te.</p>
+            <p>Puoi trovarlo allegato a questa mail oppure nel tuo <a href="{{store url="customer/account/"}}">Account Dashboard</a>.</p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer"}}

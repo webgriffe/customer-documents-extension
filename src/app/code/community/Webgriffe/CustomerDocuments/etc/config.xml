@@ -37,6 +37,25 @@
                 </setup>
             </webgriffe_customerdocuments_setup>
         </resources>
+        <events>
+            <webgriffe_customerdocuments_document_save_after>
+                <observers>
+                    <send_mail_after_document_creation>
+                        <class>webgriffe_customerdocuments/observer</class>
+                        <method>sendMailAfterDocumentCreation</method>
+                    </send_mail_after_document_creation>
+                </observers>
+            </webgriffe_customerdocuments_document_save_after>
+        </events>
+        <template>
+            <email>
+                <webgriffe_customerdocuments_document_new translate="label">
+                    <label>New customer document</label>
+                    <file>webgriffe_customerdocuments/document_new.html</file>
+                    <type>html</type>
+                </webgriffe_customerdocuments_document_new>
+            </email>
+        </template>
     </global>
     <frontend>
         <layout>
