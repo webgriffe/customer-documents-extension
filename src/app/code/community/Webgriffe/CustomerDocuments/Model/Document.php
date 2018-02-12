@@ -28,6 +28,11 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
     const TYPE_INVOICE = 'invoice';
     const TYPE_DELIVERY_NOTE = 'delivery_note';
 
+    /**
+     * @var Mage_Customer_Model_Customer
+     */
+    protected $customer;
+
     public static function getAllowedTypes()
     {
         return array_keys(self::getTypeLabelMapping());
@@ -57,14 +62,25 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         return $typeLabelMapping[$this->getType()];
     }
 
+    /**
+     * @return Mage_Core_Model_Abstract|Mage_Customer_Model_Customer
+     */
+    public function getCustomer()
+    {
+        if (!$this->customer || !$this->customer->getId()) {
+            $this->customer =  Mage::getModel('customer/customer')->load($this->getCustomerId());
+        }
+        return $this->customer;
+    }
+
+    public function getAbsoluteFilepath()
+    {
+        return self::getDocumentBasePath() . DS . $this->getFilepath();
+    }
+
     protected static function getTypeLabelMapping()
     {
         return [self::TYPE_INVOICE => 'Invoice', self::TYPE_DELIVERY_NOTE => 'Delivery Note'];
-    }
-
-    protected function getAbsoluteFilepath()
-    {
-        return self::getDocumentBasePath() . DS . $this->getFilepath();
     }
 
     protected function _construct()

@@ -49,11 +49,11 @@
         </events>
         <template>
             <email>
-                <webgriffe_customerdocuments_document_new translate="label">
+                <customer_documents_new_document_email_template translate="label">
                     <label>New customer document</label>
                     <file>webgriffe_customerdocuments/document_new.html</file>
                     <type>html</type>
-                </webgriffe_customerdocuments_document_new>
+                </customer_documents_new_document_email_template>
             </email>
         </template>
     </global>
@@ -84,4 +84,12 @@
             </webgriffe_customerdocuments>
         </routers>
     </frontend>
+    <default>
+        <customer>
+            <documents>
+                <new_document_email_template>customer_documents_new_document_email_template</new_document_email_template>
+                <new_document_email_sender>sales</new_document_email_sender>
+            </documents>
+        </customer>
+    </default>
 </config>
