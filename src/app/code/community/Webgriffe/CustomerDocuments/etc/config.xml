@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Webgriffe_CustomerDocuments>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </Webgriffe_CustomerDocuments>
     </modules>
     <global>

@@ -11,6 +11,8 @@
  * @method Webgriffe_CustomerDocuments_Model_Document setOrderId(int $id)
  * @method string getExternalId()
  * @method Webgriffe_CustomerDocuments_Model_Document setExternalId(string $id)
+ * @method string getDocumentDate()
+ * @method Webgriffe_CustomerDocuments_Model_Document setDocumentDate(string $time)
  * @method string getType()
  * @method Webgriffe_CustomerDocuments_Model_Document setType(string $type)
  * @method string getFilepath()
@@ -92,6 +94,10 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         $this->setUpdatedAt(Mage::getSingleton('core/date')->gmtDate());
         if ($this->isObjectNew() && null === $this->getCreatedAt()) {
             $this->setCreatedAt(Mage::getSingleton('core/date')->gmtDate());
+        }
+
+        if (!$this->getDocumentDate()) {
+            $this->setDocumentDate(Mage::getSingleton('core/date')->gmtDate());
         }
 
         if (array_key_exists(self::FILE_DATA_KEY, $this->_data)) {
