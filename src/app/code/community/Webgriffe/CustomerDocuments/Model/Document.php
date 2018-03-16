@@ -25,25 +25,35 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
     const BASE_DIR_NAME = 'customer_document';
     const FILE_DATA_KEY = '_file_data';
 
+    /**
+     * @deprecated These constants should not be statically defined here
+     */
     const TYPE_INVOICE = 'invoice';
+
+    /**
+     * @deprecated These constants should not be statically defined here
+     */
     const TYPE_DELIVERY_NOTE = 'delivery_note';
 
     /**
      * @var Mage_Customer_Model_Customer
      */
-    protected $customer;
+    protected $customer = null;
 
-    public static function getAllowedTypes()
+    protected function _construct()
     {
-        return array_keys(self::getTypeLabelMapping());
+        $this->_init('webgriffe_customerdocuments/document');
     }
 
     /**
-     * @return string
+     * @return Mage_Customer_Model_Customer
      */
-    public static function getDocumentBasePath()
+    public function getCustomer()
     {
-        return rtrim(Mage::getBaseDir('var'), DS) . DS . self::BASE_DIR_NAME;
+        if (!$this->customer || !$this->customer->getId()) {
+            $this->customer =  Mage::getModel('customer/customer')->load($this->getCustomerId());
+        }
+        return $this->customer;
     }
 
     public function getFileContent()
@@ -56,36 +66,17 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         return basename($this->getAbsoluteFilepath());
     }
 
-    public function getTypeLabel()
+    public function getAbsoluteFilepath()
     {
-        $typeLabelMapping = self::getTypeLabelMapping();
-        return $typeLabelMapping[$this->getType()];
+        return $this->getDocumentBasePath() . DS . $this->getFilepath();
     }
 
     /**
-     * @return Mage_Core_Model_Abstract|Mage_Customer_Model_Customer
+     * @return string
      */
-    public function getCustomer()
+    protected function getDocumentBasePath()
     {
-        if (!$this->customer || !$this->customer->getId()) {
-            $this->customer =  Mage::getModel('customer/customer')->load($this->getCustomerId());
-        }
-        return $this->customer;
-    }
-
-    public function getAbsoluteFilepath()
-    {
-        return self::getDocumentBasePath() . DS . $this->getFilepath();
-    }
-
-    protected static function getTypeLabelMapping()
-    {
-        return [self::TYPE_INVOICE => 'Invoice', self::TYPE_DELIVERY_NOTE => 'Delivery Note'];
-    }
-
-    protected function _construct()
-    {
-        $this->_init('webgriffe_customerdocuments/document');
+        return rtrim(Mage::getBaseDir('var'), DS) . DS . self::BASE_DIR_NAME;
     }
 
     /**
@@ -97,19 +88,15 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         if (!$this->getType()) {
             throw new \RuntimeException('Please specify a type for the document.');
         }
-        if (!in_array($this->getType(), self::getAllowedTypes(), true)) {
-            throw new \RuntimeException(
-                sprintf('Invalid type "%s". Allowed types are: %s.', $this->getType(), implode(', ', self::getAllowedTypes()))
-            );
-        }
+
         $this->setUpdatedAt(Mage::getSingleton('core/date')->gmtDate());
         if ($this->isObjectNew() && null === $this->getCreatedAt()) {
             $this->setCreatedAt(Mage::getSingleton('core/date')->gmtDate());
         }
+
         if (array_key_exists(self::FILE_DATA_KEY, $this->_data)) {
             $fileData = $this->_data[self::FILE_DATA_KEY];
             $this->handleFileData($fileData);
-
         }
 
         return parent::_beforeSave();
@@ -128,7 +115,8 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
         $filename = $fileData['filename'];
         $destinationFilename = date('YmdHis') . '_' . $filename;
         $filepath = $this->getCustomerId() . DS . $destinationFilename;
-        $fullDestinationPath = self::getDocumentBasePath() . DS . $filepath;
+        $fullDestinationPath = $this->getDocumentBasePath() . DS . $filepath;
+
         if (!is_dir(dirname($fullDestinationPath))) {
             if (!mkdir(dirname($fullDestinationPath), 0777, true) && !is_dir(dirname($fullDestinationPath))) {
                 throw new \RuntimeException(
@@ -136,11 +124,13 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
                 );
             }
         }
+
         if (!file_put_contents($fullDestinationPath, $binary)) {
             throw new \RuntimeException(
                 sprintf('Cannot save document file to disk at path "%s"', $fullDestinationPath)
             );
         }
+
         $this->setFilepath($filepath);
     }
 }
