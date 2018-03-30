@@ -18,7 +18,14 @@ class Webgriffe_CustomerDocuments_Model_Observer
         }
 
         try {
-            $this->sendEmail($document);
+            if (!$this->sendEmail($document)) {
+                Mage::log(
+                    sprintf(
+                        'Unable to send new document email for document "%s". Unknown reason.',
+                        $document->getId()
+                    )
+                );
+            }
         } catch (Exception $e) {
             Mage::log(
                 sprintf(
@@ -32,6 +39,7 @@ class Webgriffe_CustomerDocuments_Model_Observer
 
     /**
      * @param Webgriffe_CustomerDocuments_Model_Document $document
+     * @return bool
      * @throws Exception
      */
     protected function sendEmail(Webgriffe_CustomerDocuments_Model_Document $document)
@@ -62,6 +70,7 @@ class Webgriffe_CustomerDocuments_Model_Observer
             ),
             $storeId
         );
+        return (bool)$mailTemplate->getSentSuccess();
     }
 
     protected function getEmails($configPath)

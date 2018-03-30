@@ -41,6 +41,11 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
      * @var Mage_Customer_Model_Customer
      */
     protected $customer = null;
+    
+    /**
+     * @var string
+     */
+    protected $_eventPrefix = 'webgriffe_customerdocuments_document';
 
     protected function _construct()
     {
