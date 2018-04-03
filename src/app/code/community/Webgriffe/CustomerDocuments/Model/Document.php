@@ -79,6 +79,21 @@ class Webgriffe_CustomerDocuments_Model_Document extends Mage_Core_Model_Abstrac
     }
 
     /**
+     * @return Mage_Sales_Model_Order|null
+     */
+    public function getOrder()
+    {
+        if (!$this->getOrderId()) {
+            return null;
+        }
+        $order = Mage::getModel('sales/order')->load($this->getOrderId());
+        if (!$order || !$order->getId()) {
+            return null;
+        }
+        return $order;
+    }
+
+    /**
      * @return string
      */
     protected function getDocumentBasePath()
