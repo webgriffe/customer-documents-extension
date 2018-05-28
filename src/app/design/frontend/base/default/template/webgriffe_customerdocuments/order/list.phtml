@@ -19,7 +19,7 @@
         <?php foreach ($this->getDocuments() as $document): ?>
             <tr>
                 <td class="nobr"><?php echo $document->getCreatedAt() ?></td>
-                <td class="nobr"><?php echo $this->__($document->getTypeLabel()) ?></td>
+                <td class="nobr"><?php echo $this->__($document->getType()) ?></td>
                 <td><?php echo $document->getFileName() ?></td>
                 <td>
                     <a href="<?php echo $this->getUrl('customer_documents/index/download', ['id' => $document->getId()]) ?>">
