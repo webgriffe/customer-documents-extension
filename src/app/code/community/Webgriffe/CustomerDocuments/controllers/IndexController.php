@@ -20,6 +20,10 @@ class Webgriffe_CustomerDocuments_IndexController extends Mage_Core_Controller_F
             $this->getResponse()->setHeader('HTTP/1.1','403 Forbidden')->setBody('Access denied');
             return;
         }
+        if (!file_exists($document->getAbsoluteFilepath())) {
+            $this->norouteAction();
+            return;
+        }
         $this->_prepareDownloadResponse($document->getFileName(), $document->getFileContent());
     }
 }
