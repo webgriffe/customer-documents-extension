@@ -5,7 +5,6 @@ class Webgriffe_CustomerDocuments_Model_Observer
     const XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE = 'customer/documents/new_document_email_template';
     const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO = 'customer/documents/new_document_email_copy_to';
     const XML_PATH_NEW_DOCUMENT_EMAIL_SENDER = 'customer/documents/new_document_email_sender';
-    const CAN_SEND_EMAIL_KEY = 'can_send_email';
 
     public function sendMailAfterDocumentCreation(Varien_Event_Observer $event)
     {
@@ -15,13 +14,6 @@ class Webgriffe_CustomerDocuments_Model_Observer
         }
 
         if (!$document->isObjectNew()) {
-            return;
-        }
-
-        $document->setData(self::CAN_SEND_EMAIL_KEY, true);
-        Mage::dispatchEvent('webgriffe_customerdocuments_can_send_notification_email', ['document' => $document]);
-        $canSend = $document->getData(self::CAN_SEND_EMAIL_KEY);
-        if (!$canSend) {
             return;
         }
 
