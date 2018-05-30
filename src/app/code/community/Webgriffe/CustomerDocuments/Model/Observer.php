@@ -6,6 +6,8 @@ class Webgriffe_CustomerDocuments_Model_Observer
     const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO = 'customer/documents/new_document_email_copy_to';
     const XML_PATH_NEW_DOCUMENT_EMAIL_SENDER = 'customer/documents/new_document_email_sender';
 
+    const CAN_SEND_EMAIL_EVENT_KEY = 'canSend';
+
     public function sendMailAfterDocumentCreation(Varien_Event_Observer $event)
     {
         $document = $event->getData('data_object');
@@ -59,17 +61,31 @@ class Webgriffe_CustomerDocuments_Model_Observer
         foreach ($copyTo as $email) {
             $mailTemplate->addBcc($email);
         }
+        $dataContainer = new Varien_Object(
+            array(
+                self::CAN_SEND_EMAIL_EVENT_KEY => true,
+                'vars' => array(
+                    'user' => $customer,
+                    'document' => $document,
+                )
+            )
+        );
+
+        Mage::dispatchEvent('customerdocument_send_email_before', array('data' => $dataContainer));
+
+        if (!$dataContainer->getData(self::CAN_SEND_EMAIL_EVENT_KEY)) {
+            return true;
+        }
+
         $mailTemplate->sendTransactional(
             $templateId,
             Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
             $customer->getEmail(),
             $customerName,
-            array(
-                'user' => $customer,
-                'document' => $document,
-            ),
+            $dataContainer->getData('vars'),
             $storeId
         );
+
         return (bool)$mailTemplate->getSentSuccess();
     }
 
