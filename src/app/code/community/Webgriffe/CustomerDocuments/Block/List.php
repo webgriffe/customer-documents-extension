@@ -2,18 +2,35 @@
 
 class Webgriffe_CustomerDocuments_Block_List extends Mage_Core_Block_Template
 {
-    /**
-     * @return Webgriffe_CustomerDocuments_Model_Resource_Document_Collection
-     */
-    public function getDocuments()
+    public function __construct()
     {
-        return Mage::getModel('webgriffe_customerdocuments/document')
+        parent::__construct();
+
+        $documents = Mage::getModel('webgriffe_customerdocuments/document')
             ->getCollection()
             ->addFieldToFilter(
                 'customer_id',
                 Mage::getSingleton('customer/session')->getCustomerId()
             )
-            ->setOrder('created_at', 'DESC')
-        ;
+            ->setOrder('created_at', 'DESC');
+
+        $this->setDocuments($documents);
+    }
+    
+    protected function _prepareLayout()
+    {
+        parent::_prepareLayout();
+
+        $pager = $this->getLayout()->createBlock('page/html_pager', 'webgriffe.customerdocuments.list.pager')
+            ->setCollection($this->getDocuments());
+        $this->setChild('pager', $pager);
+        $this->getDocuments()->load();
+
+        return $this;
+    }
+    
+    public function getPagerHtml()
+    {
+        return $this->getChildHtml('pager');
     }
 }
