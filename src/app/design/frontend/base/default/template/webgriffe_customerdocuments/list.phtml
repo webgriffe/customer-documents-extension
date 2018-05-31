@@ -2,7 +2,7 @@
 <div class="page-title">
     <h1><?php echo $this->__('My Documents') ?></h1>
 </div>
-
+<?php echo $this->getPagerHtml(); ?>
 <?php if ($this->getDocuments()->getSize()): ?>
     <table class="data-table" id="my-documents-table">
         <col width="1" />
@@ -33,6 +33,7 @@
         </tbody>
     </table>
     <script type="text/javascript">decorateTable('my-documents-table');</script>
+    <?php echo $this->getPagerHtml(); ?>
 <?php else: ?>
     <p><?php echo $this->__('You have no documents.'); ?></p>
 <?php endif; ?>
