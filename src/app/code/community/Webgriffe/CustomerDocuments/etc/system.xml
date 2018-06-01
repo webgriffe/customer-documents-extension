@@ -35,7 +35,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <comment>Comma-separated. Copy method is always BCC.</comment>
+                            <comment>Comma-separated</comment>
                         </new_document_email_copy_to>
                         <new_document_email_copy_method translate="label">
                             <label>New Document Email Copy Method</label>

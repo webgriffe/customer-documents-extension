@@ -41,26 +41,28 @@ class Webgriffe_CustomerDocuments_Model_Observer
     }
 
     /**
+     * This is public because someone may want to send a document email in more situations other than the creation of
+     * the document itself. So this may be called from the outside.
+     *
      * @param Webgriffe_CustomerDocuments_Model_Document $document
+     *
      * @return bool
+     *
      * @throws Exception
      */
-    protected function sendEmail(Webgriffe_CustomerDocuments_Model_Document $document)
+    public function sendEmail(Webgriffe_CustomerDocuments_Model_Document $document)
     {
         $customer = $document->getCustomer();
         $storeId = $customer->getStore()->getId();
 
         // Get the destination email addresses to send copies to
         $copyTo = $this->getEmails(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO, $storeId);
-        $copyMethod = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD, $storeId);
+        $copyMethod = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD, $storeId) ?: 'bcc';
         $templateId = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE, $storeId);
         $customerName = $customer->getName();
 
+        /* @var Mage_Core_Model_Email_Template $mailTemplate */
         $mailTemplate = Mage::getModel('core/email_template');
-        /* @var $mailTemplate Mage_Core_Model_Email_Template */
-        $mailTemplate->setDesignConfig(array('area' => 'frontend'));
-
-        $this->addPdfAttachment($mailTemplate->getMail(), $document->getAbsoluteFilepath());
 
         if ($copyTo && $copyMethod == 'bcc') {
             foreach ($copyTo as $email) {
@@ -84,29 +86,37 @@ class Webgriffe_CustomerDocuments_Model_Observer
             return true;
         }
 
-        $mailTemplate->sendTransactional(
+        $templateVars = $dataContainer->getData('vars');
+
+        $mailTemplate->setDesignConfig(array('area' => 'frontend', 'store' => $storeId));
+
+        $result = true;
+        $result = $result && $this->sendDocumentEmail(
+            $document,
+            $mailTemplate,
             $templateId,
-            Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
+            $storeId,
             $customer->getEmail(),
             $customerName,
-            $dataContainer->getData('vars'),
-            $storeId
+            $templateVars
         );
 
+        // Email copies are sent as separated emails if their copy method is 'copy'
         if ($copyTo && $copyMethod == 'copy') {
-            foreach ($copyTo as $email) {
-                $mailTemplate->sendTransactional(
+            foreach ($copyTo as $to) {
+                $result = $result && $this->sendDocumentEmail(
+                    $document,
+                    $mailTemplate,
                     $templateId,
-                    Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
-                    $email,
+                    $storeId,
+                    $to,
                     $customerName,
-                    $dataContainer->getData('vars'),
-                    $storeId
+                    $templateVars
                 );
             }
         }
 
-        return (bool)$mailTemplate->getSentSuccess();
+        return $result;
     }
 
     /**
@@ -123,28 +133,51 @@ class Webgriffe_CustomerDocuments_Model_Observer
         return [];
     }
 
+
     /**
-     * @param Zend_Mail $mail
-     * @param $filePath
-     * @return Zend_Mail
-     * @throws Zend_Mail_Exception
+     * @param Webgriffe_CustomerDocuments_Model_Document $document
+     * @param Mage_Core_Model_Email_Template $mailer
+     * @param int|string $templateId
+     * @param int $storeId
+     * @param string $recipientEmail
+     * @param string $recipientName
+     * @param array $templateVars
+     *
+     * @return bool
      */
-    protected function addPdfAttachment(Zend_Mail $mail, $filePath)
-    {
-        $mail->setType(Zend_Mime::MULTIPART_MIXED);
+    private function sendDocumentEmail(
+        Webgriffe_CustomerDocuments_Model_Document $document,
+        Mage_Core_Model_Email_Template $mailer,
+        $templateId,
+        $storeId,
+        $recipientEmail,
+        $recipientName,
+        array $templateVars
+    ) {
+        if ($document) {
+            //Attache document PDF
+            $filePath = $document->getAbsoluteFilepath();
 
-        // @codingStandardsIgnoreStart
-        if (file_exists($filePath)) {
-            $mail->createAttachment(
-                file_get_contents($filePath),
-                'application/pdf',
-                Zend_Mime::DISPOSITION_ATTACHMENT,
-                Zend_Mime::ENCODING_BASE64,
-                basename($filePath)
-            );
+            //search for file
+            if (file_exists($filePath)) {
+                $mailer->getMail()->createAttachment(
+                    file_get_contents($filePath),
+                    'application/pdf',
+                    Zend_Mime::DISPOSITION_ATTACHMENT,
+                    Zend_Mime::ENCODING_BASE64,
+                    $document->getFilepath()
+                );
+            }
         }
-        // @codingStandardsIgnoreEnd
 
-        return $mail;
+        $mailer->sendTransactional(
+            $templateId,
+            Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
+            $recipientEmail,
+            $recipientName,
+            $templateVars
+        );
+
+        return (bool)$mailer->getSentSuccess();
     }
 }
