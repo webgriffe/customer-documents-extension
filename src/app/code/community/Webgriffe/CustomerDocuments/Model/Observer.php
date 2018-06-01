@@ -2,11 +2,12 @@
 
 class Webgriffe_CustomerDocuments_Model_Observer
 {
-    const XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE = 'customer/documents/new_document_email_template';
-    const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO = 'customer/documents/new_document_email_copy_to';
-    const XML_PATH_NEW_DOCUMENT_EMAIL_SENDER = 'customer/documents/new_document_email_sender';
+    const XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE      = 'customer/documents/new_document_email_template';
+    const XML_PATH_NEW_DOCUMENT_EMAIL_SENDER        = 'customer/documents/new_document_email_sender';
+    const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO       = 'customer/documents/new_document_email_copy_to';
+    const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD   = 'customer/documents/new_document_email_copy_method';
 
-    const CAN_SEND_EMAIL_EVENT_KEY = 'canSend';
+    const CAN_SEND_EMAIL_EVENT_KEY                  = 'canSend';
 
     public function sendMailAfterDocumentCreation(Varien_Event_Observer $event)
     {
@@ -50,17 +51,23 @@ class Webgriffe_CustomerDocuments_Model_Observer
         $storeId = $customer->getStore()->getId();
 
         // Get the destination email addresses to send copies to
-        $copyTo = $this->getEmails(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO);
+        $copyTo = $this->getEmails(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO, $storeId);
+        $copyMethod = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD, $storeId);
         $templateId = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE, $storeId);
         $customerName = $customer->getName();
 
         $mailTemplate = Mage::getModel('core/email_template');
         /* @var $mailTemplate Mage_Core_Model_Email_Template */
         $mailTemplate->setDesignConfig(array('area' => 'frontend'));
+
         $this->addPdfAttachment($mailTemplate->getMail(), $document->getAbsoluteFilepath());
-        foreach ($copyTo as $email) {
-            $mailTemplate->addBcc($email);
+
+        if ($copyTo && $copyMethod == 'bcc') {
+            foreach ($copyTo as $email) {
+                $mailTemplate->addBcc($email);
+            }
         }
+
         $dataContainer = new Varien_Object(
             array(
                 self::CAN_SEND_EMAIL_EVENT_KEY => true,
@@ -86,12 +93,30 @@ class Webgriffe_CustomerDocuments_Model_Observer
             $storeId
         );
 
+        if ($copyTo && $copyMethod == 'copy') {
+            foreach ($copyTo as $email) {
+                $mailTemplate->sendTransactional(
+                    $templateId,
+                    Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
+                    $email,
+                    $customerName,
+                    $dataContainer->getData('vars'),
+                    $storeId
+                );
+            }
+        }
+
         return (bool)$mailTemplate->getSentSuccess();
     }
 
-    protected function getEmails($configPath)
+    /**
+     * @param string $configPath
+     * @param int $storeId
+     * @return array
+     */
+    protected function getEmails($configPath, $storeId)
     {
-        $data = Mage::getStoreConfig($configPath);
+        $data = Mage::getStoreConfig($configPath, $storeId);
         if (!empty($data)) {
             return explode(',', $data);
         }
@@ -119,6 +144,7 @@ class Webgriffe_CustomerDocuments_Model_Observer
             );
         }
         // @codingStandardsIgnoreEnd
+
         return $mail;
     }
 }
