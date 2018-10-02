@@ -175,7 +175,8 @@ class Webgriffe_CustomerDocuments_Model_Observer
             Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_SENDER, $storeId),
             $recipientEmail,
             $recipientName,
-            $templateVars
+            $templateVars,
+            $storeId
         );
 
         return (bool)$mailer->getSentSuccess();
