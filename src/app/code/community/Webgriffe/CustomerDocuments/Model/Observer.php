@@ -80,7 +80,12 @@ class Webgriffe_CustomerDocuments_Model_Observer
             )
         );
 
-        Mage::dispatchEvent('customerdocument_send_email_before', array('data' => $dataContainer));
+        Mage::dispatchEvent('customerdocument_send_email_before',
+            array(
+                'data'   => $dataContainer,
+                'copyTo' => $copyTo
+            )
+        );
 
         if (!$dataContainer->getData(self::CAN_SEND_EMAIL_EVENT_KEY)) {
             return true;
