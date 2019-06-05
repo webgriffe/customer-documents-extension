@@ -64,28 +64,29 @@ class Webgriffe_CustomerDocuments_Model_Observer
         /* @var Mage_Core_Model_Email_Template $mailTemplate */
         $mailTemplate = Mage::getModel('core/email_template');
 
-        if ($copyTo && $copyMethod == 'bcc') {
-            foreach ($copyTo as $email) {
-                $mailTemplate->addBcc($email);
-            }
-        }
-
         $dataContainer = new Varien_Object(
             array(
                 self::CAN_SEND_EMAIL_EVENT_KEY => true,
-                'vars' => array(
-                    'user' => $customer,
-                    'document' => $document,
+                'copy_to'=> $copyTo,
+                'vars'  => array(
+                    'user'      => $customer,
+                    'document'  => $document
                 )
             )
         );
 
         Mage::dispatchEvent('customerdocument_send_email_before',
             array(
-                'data'   => $dataContainer,
-                'copyTo' => $copyTo
+                'data'   => $dataContainer
             )
         );
+
+        $copyTo = $dataContainer->getCopyTo();
+        if ($copyTo && $copyMethod == 'bcc') {
+            foreach ($copyTo as $email) {
+                $mailTemplate->addBcc($email);
+            }
+        }
 
         if (!$dataContainer->getData(self::CAN_SEND_EMAIL_EVENT_KEY)) {
             return true;
