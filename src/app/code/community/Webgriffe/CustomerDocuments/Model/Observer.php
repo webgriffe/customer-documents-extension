@@ -7,7 +7,9 @@ class Webgriffe_CustomerDocuments_Model_Observer
     const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO       = 'customer/documents/new_document_email_copy_to';
     const XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD   = 'customer/documents/new_document_email_copy_method';
 
-    const CAN_SEND_EMAIL_EVENT_KEY                  = 'canSend';
+    const CAN_SEND_EMAIL_EVENT_KEY = 'canSend';
+    const DOCUMENT_EMAIL_RECIPIENT_ADDRESS_EVENT_KEY = 'emailRecipientAddress';
+    const DOCUMENT_EMAIL_COPY_TO_EVENT_KEY = 'copy_to';
 
     public function sendMailAfterDocumentCreation(Varien_Event_Observer $event)
     {
@@ -59,7 +61,6 @@ class Webgriffe_CustomerDocuments_Model_Observer
         $copyTo = $this->getEmails(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_TO, $storeId);
         $copyMethod = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_COPY_METHOD, $storeId) ?: 'bcc';
         $templateId = Mage::getStoreConfig(self::XML_PATH_NEW_DOCUMENT_EMAIL_TEMPLATE, $storeId);
-        $customerName = $customer->getName();
 
         /* @var Mage_Core_Model_Email_Template $mailTemplate */
         $mailTemplate = Mage::getModel('core/email_template');
@@ -67,7 +68,8 @@ class Webgriffe_CustomerDocuments_Model_Observer
         $dataContainer = new Varien_Object(
             array(
                 self::CAN_SEND_EMAIL_EVENT_KEY => true,
-                'copy_to'=> $copyTo,
+                self::DOCUMENT_EMAIL_RECIPIENT_ADDRESS_EVENT_KEY => $customer->getData('email'),
+                self::DOCUMENT_EMAIL_COPY_TO_EVENT_KEY => $copyTo,
                 'vars'  => array(
                     'user'      => $customer,
                     'document'  => $document
@@ -81,15 +83,19 @@ class Webgriffe_CustomerDocuments_Model_Observer
             )
         );
 
+        if (!$dataContainer->getData(self::CAN_SEND_EMAIL_EVENT_KEY)) {
+            return true;
+        }
+
+        $recipientAddress = $dataContainer->getData(self::DOCUMENT_EMAIL_RECIPIENT_ADDRESS_EVENT_KEY);
+        $recipientName = is_array($recipientAddress) ?
+            array_fill(0, count($recipientAddress), $customer->getName()) :
+            $customer->getName();
         $copyTo = $dataContainer->getCopyTo();
         if ($copyTo && $copyMethod == 'bcc') {
             foreach ($copyTo as $email) {
                 $mailTemplate->addBcc($email);
             }
-        }
-
-        if (!$dataContainer->getData(self::CAN_SEND_EMAIL_EVENT_KEY)) {
-            return true;
         }
 
         $templateVars = $dataContainer->getData('vars');
@@ -102,8 +108,8 @@ class Webgriffe_CustomerDocuments_Model_Observer
             $mailTemplate,
             $templateId,
             $storeId,
-            $customer->getEmail(),
-            $customerName,
+            $recipientAddress,
+            $recipientName,
             $templateVars
         );
 
@@ -116,7 +122,7 @@ class Webgriffe_CustomerDocuments_Model_Observer
                     $templateId,
                     $storeId,
                     $to,
-                    $customerName,
+                    $customer->getName(),
                     $templateVars
                 );
             }
