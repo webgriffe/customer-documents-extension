@@ -23,7 +23,10 @@ $table = $installer->getConnection()
         'customer_id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
         null,
-        array('nullable' => false),
+        array(
+            'nullable' => false,
+            'unsigned' => true,
+        ),
         'Customer Id'
     )
     ->addColumn(
